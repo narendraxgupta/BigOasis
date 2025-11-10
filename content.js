@@ -3,6 +3,121 @@
 
   let isTransparent = false;
 
+  // Problem counter for caring messages
+  let problemsSolved = 0;
+  const CARING_MESSAGE_INTERVAL = 3; // Show caring message every 3 problems
+
+  // Load problem counter from storage
+  async function loadProblemCounter() {
+    try {
+      if (chrome && chrome.storage && chrome.storage.local) {
+        const result = await new Promise((resolve, reject) => {
+          chrome.storage.local.get(['bigOasisProblemsSolved'], (result) => {
+            if (chrome.runtime.lastError) {
+              reject(new Error(chrome.runtime.lastError.message));
+            } else {
+              resolve(result);
+            }
+          });
+        });
+        problemsSolved = result.bigOasisProblemsSolved || 0;
+      }
+    } catch (error) {
+      console.warn('BigOasis: Failed to load problem counter:', error);
+      problemsSolved = 0;
+    }
+  }
+
+  // Save problem counter to storage
+  async function saveProblemCounter() {
+    try {
+      if (chrome && chrome.storage && chrome.storage.local) {
+        await new Promise((resolve, reject) => {
+          chrome.storage.local.set({ bigOasisProblemsSolved: problemsSolved }, () => {
+            if (chrome.runtime.lastError) {
+              reject(new Error(chrome.runtime.lastError.message));
+            } else {
+              resolve();
+            }
+          });
+        });
+      }
+    } catch (error) {
+      console.warn('BigOasis: Failed to save problem counter:', error);
+    }
+  }
+
+  // Increment problem counter and check if caring message should be shown
+  async function incrementProblemCounter() {
+    problemsSolved++;
+    await saveProblemCounter();
+    return (problemsSolved % CARING_MESSAGE_INTERVAL === 0);
+  }
+
+  // Caring messages for developers (shown every 3 problems)
+  const caringMessages = [
+    "🌟 3 problems done! Thak gaye hoge? Thoda paani peelo! 💧",
+    "💙 3 problems complete! Gharwalo se baat kari? They miss you! 📞",
+    "🫂 3 problems solved! Sab sahi ho jayega, bas patience rakho ✨", 
+    "☕ 3 problems down! Coffee break lelo, tumhara dimag fresh ho jayega!",
+    "🌸 3 problems finished! Hard work kar rahe ho, but self-care bhi zaroori hai 💕",
+    "🤗 3 problems complete! Mom ko call karo, unki awaaz sunke achha lagega",
+    "🍎 3 problems done! Kuch healthy khaya hai aaj? Body ko fuel chahiye!",
+    "😊 3 problems solved! Smile kar lo, you're doing amazing! 🌟",
+    "🛌 3 problems complete! Neend poori li thi? Sleep = better code!",
+    "🌈 3 problems done! Mushkil waqt hai, but you're stronger than you think!",
+    "💪 3 problems finished! Code se break lo, 5 min walk karo outside",
+    "🎵 3 problems complete! Favorite song sun lo, mood fresh ho jayega",
+    "🧘 3 problems solved! Deep breath lo... in... out... better feel kar rahe ho?",
+    "📚 3 problems done! Roz kuch naya seekh rahe ho, proud feel karo!",
+    "🌻 3 problems complete! Progress slow lage toh bhi, you're moving forward!",
+    "💝 3 problems finished! Self-love is important too, be kind to yourself",
+    "🚀 3 problems solved! Dream big kar rahe ho, universe tumhara saath dega!",
+    "🌙 3 problems done! Late night coding? Eyes ko rest do kabhi kabhi",
+    "🤝 3 problems complete! Help chahiye toh dosto se poocho, sharing is caring!",
+    "✨ 3 problems finished! Every solution is making you a better developer!"
+  ];
+
+  // Get random caring message
+  function getCaringMessage() {
+    return caringMessages[Math.floor(Math.random() * caringMessages.length)];
+  }
+
+  // Time-based greetings
+  function getTimeBasedGreeting() {
+    const hour = new Date().getHours();
+    const greetings = {
+      earlyMorning: ["🌅 Subah subah coding? Dedication level 💯!", "🌄 Early bird! Coffee ready hai?"],
+      morning: ["☀️ Good morning, coder! Let's crush some algorithms! 💪", "🌞 Morning energy dikha do code mein!"],
+      afternoon: ["🌤️ Afternoon grind! Keep going strong! 🔥", "☀️ Lunch ke baad bhi coding? Respect! 👏"],
+      evening: ["🌆 Evening productivity mode ON! ✨", "🌇 Shaam ho gayi, but passion still burning! 🔥"],
+      night: ["🌙 Night owl detected! Don't forget to rest 😴", "⭐ Late night coding session? You're dedicated! 🌟"],
+      lateNight: ["🦉 2 AM? Yaar thoda rest karo! Health first! 💙", "🌃 Very late night! Please take care of yourself! 🤗"]
+    };
+    
+    if (hour >= 5 && hour < 8) return greetings.earlyMorning[Math.floor(Math.random() * greetings.earlyMorning.length)];
+    if (hour >= 8 && hour < 12) return greetings.morning[Math.floor(Math.random() * greetings.morning.length)];
+    if (hour >= 12 && hour < 17) return greetings.afternoon[Math.floor(Math.random() * greetings.afternoon.length)];
+    if (hour >= 17 && hour < 21) return greetings.evening[Math.floor(Math.random() * greetings.evening.length)];
+    if (hour >= 21 || hour < 2) return greetings.night[Math.floor(Math.random() * greetings.night.length)];
+    return greetings.lateNight[Math.floor(Math.random() * greetings.lateNight.length)];
+  }
+
+  // Motivational quotes for complex problems
+  function getMotivationalQuote() {
+    const quotes = [
+      "💎 Diamonds are formed under pressure, and so are great developers! 💪",
+      "🚀 Every expert was once a beginner. Keep going! ✨",
+      "🌟 The code you write today is better than the code you wrote yesterday!",
+      "🧗 Climbing the algorithm mountain, one step at a time! 🏔️",
+      "💝 Struggling with complexity? That means you're learning! 📚",
+      "🎯 Focus on progress, not perfection! You're doing great! 👏",
+      "🌈 After every debugging storm comes a rainbow of working code! 🌦️",
+      "🔥 Your persistence is your superpower! Don't give up! 💫"
+    ];
+    return quotes[Math.floor(Math.random() * quotes.length)];
+  }
+
   // Rate limiting
   let lastApiCall = 0;
   const MIN_API_INTERVAL = 5000; // 5 seconds between API calls
@@ -325,13 +440,35 @@
     const endTime = performance.now();
     const analysisTime = ((endTime - startTime) / 1000).toFixed(2);
     
+    // Increment problem counter and check if caring message should be shown
+    const shouldShowCaringMessage = await incrementProblemCounter();
+    
+    // Determine which message to show based on complexity and problem count
+    let messageToShow = null;
+    const timeComplexity = result.timeComplexity || result.time || '';
+    const isOptimal = /o\(1\)|o\(log\s*n\)/i.test(timeComplexity);
+    const isComplex = /o\(n\s*[\^]|o\(2\s*\^|o\(n\s*!\)/i.test(timeComplexity);
+    
+    if (shouldShowCaringMessage) {
+      // Every 3rd problem: show caring message regardless of complexity
+      messageToShow = getCaringMessage();
+    } else if (isOptimal) {
+      // For optimal solutions (not every 3rd): show celebration only
+      messageToShow = `🎉 Optimal solution! You're crushing it! Total solved: ${problemsSolved} 🚀`;
+    } else if (isComplex) {
+      // For complex solutions: show motivational quote only
+      messageToShow = getMotivationalQuote();
+    }
+    // For medium complexity: no message (keep it clean)
+    
     return { 
       time: result.timeComplexity || result.time || 'N/A', 
       space: result.spaceComplexity || result.space || 'N/A', 
       why: result.explanation || 'No explanation',
       optimization: result.optimization || null,
       analysisTime: analysisTime,
-      timestamp: new Date().toLocaleTimeString()
+      timestamp: new Date().toLocaleTimeString(),
+      caringMessage: messageToShow
     };
   }
 
@@ -632,6 +769,11 @@
       html += `<div class="bigoasis-result-line bigoasis-optimization">⚡ <strong>Tip:</strong> ${out.optimization}</div>`;
     }
     
+    // Add caring message after analysis
+    if (out.caringMessage) {
+      html += `<div class="bigoasis-result-line bigoasis-caring-message">${out.caringMessage}</div>`;
+    }
+    
     if (out.analysisTime) {
       html += `<div class="bigoasis-result-line bigoasis-analysis-time">⏱️ Analysis took ${out.analysisTime}s</div>`;
     }
@@ -693,7 +835,7 @@
   
   const result = document.createElement('div');
   result.id = 'bigoasis-result';
-  result.textContent = '✨ Ready. Press Ctrl+Shift+A to analyze | Ctrl+Shift+H to hide';
+  result.textContent = 'Ctrl+Shift+A to analyze | Ctrl+Shift+H to hide';
   
   panel.appendChild(header);
   panel.appendChild(result);
@@ -910,6 +1052,9 @@
   // Initialize extension and check for API key
   async function initializeExtension() {
     try {
+      // Load problem counter first
+      await loadProblemCounter();
+      
       // Check if Chrome extension APIs are available
       if (!chrome || !chrome.storage || !chrome.storage.sync) {
         console.warn('BigOasis: Extension APIs not available');

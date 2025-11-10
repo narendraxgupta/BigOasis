@@ -251,6 +251,21 @@
   color: #ffeb3b;
 }
 
+/* Caring Message */
+.bigoasis-caring-message {
+  background: linear-gradient(135deg, rgba(255, 182, 193, 0.15) 0%, rgba(255, 105, 180, 0.15) 100%);
+  border-left: 3px solid #ff69b4;
+  padding: 12px;
+  margin-top: 10px;
+  border-radius: 10px;
+  color: #ffb6c1;
+  font-size: 12px;
+  font-style: italic;
+  text-align: center;
+  animation: bigoasis-caring-glow 3s ease-in-out infinite;
+  box-shadow: 0 2px 8px rgba(255, 105, 180, 0.1);
+}
+
 /* Minimized State */
 #bigoasis-panel.minimized {
   height: auto !important;
@@ -359,5 +374,16 @@
   100% {
     transform: translateY(100vh) translateX(var(--tx, 0)) rotateZ(720deg) scale(0.5);
     opacity: 0;
+  }
+}
+
+@keyframes bigoasis-caring-glow {
+  0%, 100% {
+    box-shadow: 0 2px 8px rgba(255, 105, 180, 0.1);
+    border-left-color: #ff69b4;
+  }
+  50% {
+    box-shadow: 0 4px 16px rgba(255, 105, 180, 0.3);
+    border-left-color: #ff1493;
   }
 }

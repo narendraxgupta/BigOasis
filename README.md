@@ -24,6 +24,13 @@ BigOasis is a **Chrome extension** that brings the power of **Google Gemini AI**
 - 100% accurate time & space complexity calculations
 - Smart optimization suggestions for poor complexity
 
+💙 **Caring Developer Experience**
+- **Milestone caring messages** - Special wellness reminders every 3 problems solved!
+- **Problem counter tracking** - "Problems solved: 12 | 1 more for caring message 💙"
+- **Time-based celebration** for optimal solutions with progress tracking
+- **Motivational quotes** for complex problems to boost confidence
+- **Smart message system** - caring messages feel special, not overwhelming
+
 🎨 **Beautiful Interface**
 - Draggable & resizable floating panel
 - Transparency mode for distraction-free coding
@@ -50,6 +57,8 @@ BigOasis is a **Chrome extension** that brings the power of **Google Gemini AI**
 │ ⏱ Time: 🟢 O(log n)                │
 │ 💾 Space: 🟢 O(1)                  │
 │ 💡 Why: Binary search reduces...    │
+│ 🌟 Subah subah coding? Dedication   │
+│    level 💯!                       │
 │ ⚡ Analysis took 1.2s               │
 └─────────────────────────────────────┘
 ```
