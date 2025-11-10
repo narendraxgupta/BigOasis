@@ -5,7 +5,7 @@
 <div align="center">
 
 ![BigOasis Logo](https://img.shields.io/badge/BigOasis-🌴_TC_&_SC-brightgreen?style=for-the-badge)
-[![Chrome Web Store](https://img.shields.io/badge/Chrome-Extension-blue?style=for-the-badge&logo=google-chrome)](https://chrome.google.com/webstore)
+[![Chrome Web Store](https://img.shields.io/badge/Chrome-Extension-blue?style=for-the-badge&logo=google-chrome)](#-installation)
 [![License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)](LICENSE)
 [![Made with Love](https://img.shields.io/badge/Made%20with-💙-red?style=for-the-badge)](https://github.com/narendraxgupta/bigoasis)
 
@@ -56,17 +56,25 @@ BigOasis is a **Chrome extension** that brings the power of **Google Gemini AI**
 
 ## 🎯 Installation
 
-### Option 1: Chrome Web Store (Recommended)
-1. Visit the [Chrome Web Store](#) *(coming soon!)*
-2. Click "Add to Chrome"
-3. That's it! 🎉
+### Manual Installation (Developer Mode)
+1. **Download** or clone this repository:
+   ```bash
+   git clone https://github.com/narendraxgupta/bigoasis.git
+   ```
+   *Or download as ZIP and extract*
 
-### Option 2: Manual Installation (Developer Mode)
-1. **Download** or clone this repository
-2. Open Chrome and go to `chrome://extensions/`
-3. Enable **"Developer mode"** (top right toggle)
-4. Click **"Load unpacked"** and select the BigOasis folder
-5. Pin the extension for easy access!
+2. **Open Chrome** and navigate to `chrome://extensions/`
+
+3. **Enable Developer Mode** by toggling the switch in the top-right corner
+
+4. **Click "Load unpacked"** and select the BigOasis folder
+
+5. **Pin the extension** by clicking the puzzle piece icon and pinning BigOasis
+
+6. **You're ready!** The extension will now work on LeetCode pages 🎉
+
+### 🏪 Chrome Web Store
+*Coming soon! We're working on getting BigOasis published to the Chrome Web Store for easier installation.*
 
 ## 🔧 Setup
 
@@ -165,7 +173,9 @@ We love contributions! 💙
 
 **❌ Extension not working**
 - Check if you're on a supported domain (leetcode.com, leetcode.cn, leetcode.org)
-- Try reloading the page
+- Make sure Developer Mode is enabled in Chrome extensions
+- Try reloading the page after installation
+- Verify the extension is enabled and pinned
 - Disable other conflicting extensions
 
 ## 💖 Support the Project
