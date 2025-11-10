@@ -1,0 +1,363 @@
+/* Main Panel */
+#bigoasis-panel {
+  position: fixed;
+  /* Initial centering - will be overridden by JS */
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2147483647;
+  background: #0f1115;
+  border: 1px solid #2a2f3a;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  color: #e8ecf1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px 10px;
+  min-width: 280px;
+  max-width: 700px;
+  width: auto;
+  resize: both;
+  overflow: auto;
+  font-size: 12px;
+  animation: bigoasis-fadein 0.3s ease-out;
+}
+
+/* Header */
+#bigoasis-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  cursor: move;
+  user-select: none;
+}
+
+/* Badge */
+#bigoasis-badge {
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  background: linear-gradient(135deg, #141824 0%, #1a1f2e 100%);
+  border: 1px solid #2a2f3a;
+  border-radius: 8px;
+  padding: 5px 8px;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+/* Buttons */
+#bigoasis-panel button {
+  cursor: pointer;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: #1f6feb;
+  color: #fff;
+  font-weight: 600;
+  font-size: 12px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+#bigoasis-panel button:active {
+  transform: translateY(1px);
+}
+
+#bigoasis-panel button:hover {
+  background: #2d7ff5;
+  box-shadow: 0 2px 8px rgba(31, 111, 235, 0.3);
+}
+
+/* Copy Button */
+.bigoasis-copy-btn {
+  min-width: 40px;
+  padding: 6px 10px !important;
+}
+
+.bigoasis-copy-btn.copied {
+  background: #3fb950 !important;
+}
+
+/* Minimize Button */
+.bigoasis-minimize-btn {
+  background: rgba(102, 126, 234, 0.2) !important;
+  border: 1px solid rgba(102, 126, 234, 0.3) !important;
+  border-radius: 50% !important;
+  width: 28px !important;
+  height: 28px !important;
+  min-width: 28px !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 18px !important;
+  line-height: 1 !important;
+}
+
+.bigoasis-minimize-btn:hover {
+  background: rgba(102, 126, 234, 0.4) !important;
+  transform: scale(1.1) !important;
+}
+
+/* Close Button */
+.bigoasis-close-btn {
+  background: rgba(248, 81, 73, 0.2) !important;
+  border: 1px solid rgba(248, 81, 73, 0.3) !important;
+  border-radius: 50% !important;
+  width: 28px !important;
+  height: 28px !important;
+  min-width: 28px !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 16px !important;
+  line-height: 1 !important;
+  color: #f85149 !important;
+}
+
+.bigoasis-close-btn:hover {
+  background: rgba(248, 81, 73, 0.4) !important;
+  transform: scale(1.1) !important;
+  color: #fff !important;
+}
+
+/* Transparent Button */
+.bigoasis-transparent-btn {
+  background: rgba(138, 180, 248, 0.2) !important;
+  border: 1px solid rgba(138, 180, 248, 0.3) !important;
+  border-radius: 50% !important;
+  width: 28px !important;
+  height: 28px !important;
+  min-width: 28px !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 16px !important;
+  line-height: 1 !important;
+}
+
+.bigoasis-transparent-btn:hover {
+  background: rgba(138, 180, 248, 0.4) !important;
+  transform: scale(1.1) !important;
+}
+
+/* Settings Button */
+.bigoasis-settings-btn {
+  background: rgba(156, 163, 175, 0.2) !important;
+  border: 1px solid rgba(156, 163, 175, 0.3) !important;
+  border-radius: 50% !important;
+  width: 28px !important;
+  height: 28px !important;
+  min-width: 28px !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 16px !important;
+  line-height: 1 !important;
+}
+
+.bigoasis-settings-btn:hover {
+  background: rgba(156, 163, 175, 0.4) !important;
+  transform: scale(1.1) !important;
+}
+
+/* Divider */
+#bigoasis-divider {
+  width: 1px;
+  height: 20px;
+  background: #2a2f3a;
+  margin: 0 4px;
+}
+
+/* Result Area */
+#bigoasis-result {
+  white-space: pre-wrap;
+  line-height: 1.6;
+  word-wrap: break-word;
+  overflow: auto;
+  font-size: 12px;
+  animation: bigoasis-result-fadein 0.4s ease-out;
+  max-height: 400px;
+}
+
+/* Result Lines */
+.bigoasis-result-line {
+  display: block;
+  padding: 6px 0;
+  border-bottom: 1px solid #21262d;
+}
+
+.bigoasis-result-line:last-child {
+  border-bottom: none;
+}
+
+/* Complexity Colors */
+.bigoasis-complexity-good {
+  color: #3fb950;
+  font-weight: 600;
+}
+
+.bigoasis-complexity-medium {
+  color: #d29922;
+  font-weight: 600;
+}
+
+.bigoasis-complexity-poor {
+  color: #f85149;
+  font-weight: 600;
+}
+
+/* Loading Spinner */
+.bigoasis-loading {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border: 2px solid #2a2f3a;
+  border-top-color: #1f6feb;
+  border-radius: 50%;
+  animation: bigoasis-spin 0.8s linear infinite;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+
+/* Analysis Time */
+.bigoasis-analysis-time {
+  color: #888;
+  font-size: 11px;
+  margin-top: 4px;
+  text-align: right;
+  font-style: italic;
+}
+
+/* Optimization Suggestion */
+.bigoasis-optimization {
+  background: linear-gradient(135deg, rgba(255, 193, 7, 0.1) 0%, rgba(255, 152, 0, 0.1) 100%);
+  border-left: 3px solid #ffc107;
+  padding: 10px;
+  margin-top: 8px;
+  border-radius: 8px;
+  color: #ffc107;
+  font-size: 11px;
+}
+
+.bigoasis-optimization strong {
+  display: block;
+  margin-bottom: 5px;
+  color: #ffeb3b;
+}
+
+/* Minimized State */
+#bigoasis-panel.minimized {
+  height: auto !important;
+  min-height: auto !important;
+  max-height: 60px !important;
+  overflow: hidden !important;
+}
+
+#bigoasis-panel.minimized #bigoasis-result {
+  display: none !important;
+  height: 0 !important;
+  opacity: 0 !important;
+}
+
+/* Animations */
+@keyframes bigoasis-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes bigoasis-fadein {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+@keyframes bigoasis-result-fadein {
+  0% {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  #bigoasis-panel {
+    left: 10px;
+    right: 10px;
+    transform: none;
+    max-width: calc(100vw - 20px);
+    min-width: 260px;
+  }
+  
+  #bigoasis-header {
+    gap: 6px;
+  }
+  
+  #bigoasis-badge {
+    font-size: 10px;
+    padding: 4px 6px;
+  }
+  
+  #bigoasis-panel button {
+    padding: 5px 8px;
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 480px) {
+  #bigoasis-panel {
+    top: 10px;
+    font-size: 11px;
+  }
+  
+  #bigoasis-result {
+    font-size: 11px;
+  }
+  
+  .bigoasis-minimize-btn {
+    width: 24px !important;
+    height: 24px !important;
+    min-width: 24px !important;
+    font-size: 16px !important;
+  }
+}
+
+/* Confetti Animation */
+.bigoasis-confetti {
+  position: fixed;
+  width: 10px;
+  height: 10px;
+  z-index: 2147483646;
+  animation: bigoasis-confetti-fall linear forwards;
+  pointer-events: none;
+  border-radius: 2px;
+}
+
+@keyframes bigoasis-confetti-fall {
+  0% {
+    transform: translateY(0) translateX(0) rotateZ(0deg) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) translateX(var(--tx, 0)) rotateZ(720deg) scale(0.5);
+    opacity: 0;
+  }
+}
