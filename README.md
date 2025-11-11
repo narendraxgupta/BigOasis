@@ -25,17 +25,22 @@ BigOasis is a **Chrome extension** that brings the power of **Google Gemini AI**
 - Smart optimization suggestions for poor complexity
 
 💙 **Caring Developer Experience**
-- **Milestone caring messages** - Special wellness reminders every 3 problems solved!
+- **Milestone achievements** - Celebrate solving 1, 5, 10, 25, 50, and 100 problems!
+- **Caring wellness messages** - Special reminders every 3 problems solved
 - **Problem counter tracking** - "Problems solved: 12 | 1 more for caring message 💙"
-- **Time-based celebration** for optimal solutions with progress tracking
-- **Motivational quotes** for complex problems to boost confidence
+- **Easter eggs** - Surprise messages for optimal solutions (10% chance)
+- **Progress visualization** - Visual progress bar for next milestone
 - **Smart message system** - caring messages feel special, not overwhelming
+- **Indian developer humor** - "Thak gaye hoge? Thoda paani peelo!" 😄
 
 🎨 **Beautiful Interface**
 - Draggable & resizable floating panel
 - Transparency mode for distraction-free coding
 - Confetti animations for optimal solutions! 🎉
+- **Sound effects system** - Success chimes, achievement fanfares, caring chimes
+- **Audio toggle** - Enable/disable sounds with one click
 - Dark theme that matches LeetCode
+- Smooth animations and visual feedback
 
 ⚡ **Smart Features**
 - **Keyboard shortcuts**: `Ctrl+Shift+A` to analyze, `Ctrl+Shift+H` to hide
@@ -57,9 +62,11 @@ BigOasis is a **Chrome extension** that brings the power of **Google Gemini AI**
 │ ⏱ Time: 🟢 O(log n)                │
 │ 💾 Space: 🟢 O(1)                  │
 │ 💡 Why: Binary search reduces...    │
+│ 🔥 Tip: Consider edge cases...      │
 │ 🌟 Subah subah coding? Dedication   │
-│    level 💯!                       │
-│ ⚡ Analysis took 1.2s               │
+│    level 💯! Thoda paani peelo! 💧  │
+│ Problems solved: 27 | Milestone: 💎 │
+│ ⏱ Analysis took 1.2s | 🔊          │
 └─────────────────────────────────────┘
 ```
 
@@ -117,6 +124,9 @@ BigOasis is a **Chrome extension** that brings the power of **Google Gemini AI**
 - 📋 **Copy results** to share with friends
 - ➖ **Minimize** when not needed
 - ⌨️ **Hide quickly** with `Ctrl+Shift+H`
+- 🔊 **Toggle sounds** for audio feedback
+- 🏆 **Track milestones** - See your progress toward achievement goals
+- 💙 **Enjoy caring messages** - Wellness reminders every 3 problems
 
 ## 🎨 Customization
 
@@ -135,17 +145,18 @@ Choose based on your needs:
 
 ### Tech Stack
 - **Frontend**: Vanilla JavaScript (ES6+), CSS3
-- **AI**: Google Gemini API
+- **AI**: Google Gemini API (2.5-flash, 2.5-pro, 2.0-flash)
+- **Audio**: Web Audio API for sound effects
 - **Platform**: Chrome Extension (Manifest V3)
-- **Storage**: Chrome Storage API
+- **Storage**: Chrome Storage API for persistence
 
 ### Project Structure
 ```
 BigOasis/
-├── 📄 manifest.json      # Extension configuration
-├── 🎨 content.css        # Beautiful styling
-├── ⚡ content.js         # Main functionality
-├── 🔗 pageBridge.js      # Code extraction
+├── 📄 manifest.json      # Extension configuration (v1.1.0)
+├── 🎨 content.css        # Beautiful styling with animations
+├── ⚡ content.js         # Main functionality (1400+ lines)
+├── 🔗 pageBridge.js      # Code extraction from LeetCode
 ├── ⚙️ options.html       # Settings page
 ├── 🔧 options.js         # Settings logic
 └── 📁 icons/             # Extension icons

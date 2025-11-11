@@ -28,6 +28,94 @@
     }
   }
 
+  // Sound effects system
+  const soundEffects = {
+    // Create audio context for web audio API
+    audioContext: null,
+    enabled: true,
+
+    // Initialize audio context
+    init() {
+      try {
+        this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      } catch (error) {
+        console.warn('BigOasis: Audio not supported');
+        this.enabled = false;
+      }
+    },
+
+    // Create and play a tone
+    playTone(frequency, duration, type = 'sine', volume = 0.1) {
+      if (!this.enabled || !this.audioContext) return;
+
+      try {
+        const oscillator = this.audioContext.createOscillator();
+        const gainNode = this.audioContext.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(this.audioContext.destination);
+        
+        oscillator.frequency.setValueAtTime(frequency, this.audioContext.currentTime);
+        oscillator.type = type;
+        
+        gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
+        gainNode.gain.linearRampToValueAtTime(volume, this.audioContext.currentTime + 0.01);
+        gainNode.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + duration);
+        
+        oscillator.start(this.audioContext.currentTime);
+        oscillator.stop(this.audioContext.currentTime + duration);
+      } catch (error) {
+        console.warn('BigOasis: Sound playback failed:', error);
+      }
+    },
+
+    // Play success sound (optimal solution)
+    playSuccess() {
+      // Ascending chord: C - E - G
+      this.playTone(523.25, 0.2, 'sine', 0.1); // C5
+      setTimeout(() => this.playTone(659.25, 0.2, 'sine', 0.1), 100); // E5
+      setTimeout(() => this.playTone(783.99, 0.3, 'sine', 0.12), 200); // G5
+    },
+
+    // Play gentle chime (caring message)
+    playChime() {
+      // Soft bell-like sound
+      this.playTone(880, 0.5, 'sine', 0.06); // A5
+      setTimeout(() => this.playTone(1174.66, 0.4, 'sine', 0.04), 200); // D6
+    },
+
+    // Play achievement fanfare (milestones)
+    playAchievement() {
+      // Triumphant sequence
+      this.playTone(523.25, 0.15, 'square', 0.08); // C5
+      setTimeout(() => this.playTone(659.25, 0.15, 'square', 0.08), 120); // E5
+      setTimeout(() => this.playTone(783.99, 0.15, 'square', 0.08), 240); // G5
+      setTimeout(() => this.playTone(1046.50, 0.4, 'square', 0.1), 360); // C6
+    },
+
+    // Play notification sound (analysis complete)
+    playNotification() {
+      // Quick two-tone notification
+      this.playTone(800, 0.1, 'sine', 0.05);
+      setTimeout(() => this.playTone(1000, 0.15, 'sine', 0.06), 100);
+    },
+
+    // Play easter egg sound (special surprise)
+    playEasterEgg() {
+      // Playful ascending scale
+      const notes = [523.25, 587.33, 659.25, 698.46, 783.99, 880, 987.77, 1046.50];
+      notes.forEach((freq, i) => {
+        setTimeout(() => this.playTone(freq, 0.1, 'triangle', 0.04), i * 50);
+      });
+    },
+
+    // Toggle sound on/off
+    toggle() {
+      this.enabled = !this.enabled;
+      return this.enabled;
+    }
+  };
+
   // Save problem counter to storage
   async function saveProblemCounter() {
     try {
@@ -78,9 +166,42 @@
     "✨ 3 problems finished! Every solution is making you a better developer!"
   ];
 
+  // Easter egg messages for fun (rare but delightful)
+  const easterEggMessages = [
+    "🐛 No bugs found in your logic! (Unlike my code 😅)",
+    "🔥 This solution is so clean, Marie Kondo would be proud!",
+    "💻 Even Linus Torvalds would approve of this complexity!",
+    "🎯 Optimal solution! You're basically the Neo of algorithms!",
+    "🧠 Big brain energy detected! Albert Einstein is jealous! 🤯",
+    "🚀 Houston, we have optimal complexity! 🌟",
+    "🎪 Ladies and gentlemen, witness the perfect algorithm!",
+    "🏆 This deserves a Nobel Prize in Computer Science!",
+    "🎮 Achievement unlocked: Code Wizard! 🧙‍♂️",
+    "💎 Flawless execution! Gordon Ramsay would say 'Finally, some good code!'"
+  ];
+
   // Get random caring message
   function getCaringMessage() {
     return caringMessages[Math.floor(Math.random() * caringMessages.length)];
+  }
+
+  // Get random easter egg (10% chance for optimal solutions)
+  function getEasterEgg() {
+    return easterEggMessages[Math.floor(Math.random() * easterEggMessages.length)];
+  }
+
+  // Special milestone achievements
+  function checkMilestones(count) {
+    const milestones = {
+      1: "🎉 First problem solved! Welcome to the BigOasis journey! 🌴",
+      5: "🔥 5 problems down! You're getting into the groove! 💪",
+      10: "🚀 Double digits! 10 problems conquered! You're unstoppable! ⭐",
+      25: "🏆 Quarter century! 25 problems solved! You're a coding warrior! ⚔️",
+      50: "💎 Half century! 50 problems crushed! Legendary status achieved! 👑",
+      100: "🎯 CENTURY! 100 problems demolished! You're a LeetCode legend! 🔥⚡"
+    };
+    
+    return milestones[count] || null;
   }
 
   // Time-based greetings
@@ -184,6 +305,8 @@
     try {
       // Don't create confetti if panel is hidden or minimized
       if (isHidden || isMinimized) return;
+      
+      // Note: Sound is handled by the main analysis function, not here
       
       const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f7b731', '#5f27cd', '#00d2d3', '#3fb950', '#ffa502'];
       const confettiCount = 60;
@@ -442,6 +565,7 @@
     
     // Increment problem counter and check if caring message should be shown
     const shouldShowCaringMessage = await incrementProblemCounter();
+    const milestoneMessage = checkMilestones(problemsSolved);
     
     // Determine which message to show based on complexity and problem count
     let messageToShow = null;
@@ -449,12 +573,22 @@
     const isOptimal = /o\(1\)|o\(log\s*n\)/i.test(timeComplexity);
     const isComplex = /o\(n\s*[\^]|o\(2\s*\^|o\(n\s*!\)/i.test(timeComplexity);
     
-    if (shouldShowCaringMessage) {
+    // Priority: Milestone > Caring Message > Easter Egg > Regular celebration
+    if (milestoneMessage) {
+      // Special milestone achievements take priority
+      messageToShow = milestoneMessage;
+      // Reset caring message counter when milestone is reached to avoid conflicts
+      // (user gets milestone celebration instead of caring message)
+    } else if (shouldShowCaringMessage) {
       // Every 3rd problem: show caring message regardless of complexity
       messageToShow = getCaringMessage();
     } else if (isOptimal) {
-      // For optimal solutions (not every 3rd): show celebration only
-      messageToShow = `🎉 Optimal solution! You're crushing it! Total solved: ${problemsSolved} 🚀`;
+      // For optimal solutions: 10% chance for easter egg, otherwise celebration
+      if (Math.random() < 0.1) {
+        messageToShow = getEasterEgg();
+      } else {
+        messageToShow = `🎉 Optimal solution! You're crushing it! Total solved: ${problemsSolved} 🚀`;
+      }
     } else if (isComplex) {
       // For complex solutions: show motivational quote only
       messageToShow = getMotivationalQuote();
@@ -774,6 +908,12 @@
       html += `<div class="bigoasis-result-line bigoasis-caring-message">${out.caringMessage}</div>`;
     }
     
+    // Add progress bar for next caring message (only if not just shown)
+    if (!out.caringMessage || !out.caringMessage.includes('3 problems')) {
+      const progress = ((problemsSolved % CARING_MESSAGE_INTERVAL) / CARING_MESSAGE_INTERVAL) * 100;
+      html += `<div class="bigoasis-progress-bar"><div class="bigoasis-progress-fill" style="width: ${progress}%"></div></div>`;
+    }
+    
     if (out.analysisTime) {
       html += `<div class="bigoasis-result-line bigoasis-analysis-time">⏱️ Analysis took ${out.analysisTime}s</div>`;
     }
@@ -803,6 +943,12 @@
   settingsBtn.title = 'Settings & API Key';
   settingsBtn.className = 'bigoasis-settings-btn';
   
+  const soundBtn = document.createElement('button');
+  soundBtn.id = 'bigoasis-sound-btn';
+  soundBtn.textContent = '🔊';
+  soundBtn.title = 'Toggle sound effects';
+  soundBtn.className = 'bigoasis-sound-btn';
+  
   const minimizeBtn = document.createElement('button');
   minimizeBtn.id = 'bigoasis-minimize-btn';
   minimizeBtn.textContent = '−';
@@ -828,6 +974,7 @@
   header.appendChild(btn);
   header.appendChild(copyBtn);
   header.appendChild(settingsBtn);
+  header.appendChild(soundBtn);
   header.appendChild(minimizeBtn);
   header.appendChild(transparentBtn);
   header.appendChild(closeBtn);
@@ -926,8 +1073,35 @@
       result.innerHTML = pretty(aiResult);
       copyBtn.style.display = 'inline-block';
       
-      // Trigger confetti for excellent complexity!
+      // Play appropriate sound effect based on result
       const timeComplexity = aiResult.time.toLowerCase();
+      const isOptimal = /o\(1\)|o\(log\s*n\)/i.test(timeComplexity);
+      const isComplex = /o\(n\s*[\^]|o\(2\s*\^|o\(n\s*!\)/i.test(timeComplexity);
+      
+      // Determine sound based on message type
+      if (aiResult.caringMessage) {
+        if (aiResult.caringMessage.includes('🎯') || aiResult.caringMessage.includes('🏆')) {
+          // Milestone achievement
+          soundEffects.playAchievement();
+        } else if (aiResult.caringMessage.includes('3 problems')) {
+          // Caring message
+          soundEffects.playChime();
+        } else if (aiResult.caringMessage.includes('🐛') || aiResult.caringMessage.includes('Marie Kondo')) {
+          // Easter egg
+          soundEffects.playEasterEgg();
+        } else if (isOptimal) {
+          // Optimal solution
+          soundEffects.playSuccess();
+        } else {
+          // Default notification
+          soundEffects.playNotification();
+        }
+      } else {
+        // No special message, just play notification
+        soundEffects.playNotification();
+      }
+      
+      // Trigger confetti for excellent complexity!
       if (timeComplexity.includes('o(1)') || timeComplexity.includes('o(log')) {
         createConfetti();
       }
@@ -955,8 +1129,22 @@
     e.stopPropagation();
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = result.innerHTML;
-    const text = tempDiv.textContent || tempDiv.innerText;
-    navigator.clipboard.writeText(text).then(() => {
+    
+    // Create shareable format
+    const timeComplexity = tempDiv.querySelector('.bigoasis-complexity-good, .bigoasis-complexity-medium, .bigoasis-complexity-poor');
+    const spaceComplexity = tempDiv.querySelectorAll('.bigoasis-complexity-good, .bigoasis-complexity-medium, .bigoasis-complexity-poor')[1];
+    
+    const shareText = `🌴 BigOasis Analysis Results 🌴
+
+⏱️ Time Complexity: ${timeComplexity ? timeComplexity.textContent : 'N/A'}
+💾 Space Complexity: ${spaceComplexity ? spaceComplexity.textContent : 'N/A'}
+
+Problems solved: ${problemsSolved} 🚀
+Analyzed with AI in seconds!
+
+#BigOasis #LeetCode #Algorithms #BigO`;
+    
+    navigator.clipboard.writeText(shareText).then(() => {
       const orig = copyBtn.textContent;
       copyBtn.textContent = '✅';
       copyBtn.classList.add('copied');
@@ -990,6 +1178,20 @@
       panel.style.backgroundColor = '#0f1115';
       panel.style.backdropFilter = 'none';
       transparentBtn.textContent = '👁️';
+    }
+  });
+
+  soundBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const enabled = soundEffects.toggle();
+    soundBtn.textContent = enabled ? '🔊' : '🔇';
+    soundBtn.title = enabled ? 'Sound ON - Click to mute' : 'Sound OFF - Click to enable';
+    
+    if (enabled) {
+      soundBtn.classList.remove('muted');
+      soundEffects.playNotification(); // Test sound
+    } else {
+      soundBtn.classList.add('muted');
     }
   });
 
@@ -1052,6 +1254,9 @@
   // Initialize extension and check for API key
   async function initializeExtension() {
     try {
+      // Initialize sound system
+      soundEffects.init();
+      
       // Load problem counter first
       await loadProblemCounter();
       
