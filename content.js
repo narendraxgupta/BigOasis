@@ -613,6 +613,11 @@
       existingModal.remove();
     }
 
+    // Temporarily lower the panel z-index to ensure modal appears on top
+    if (panel) {
+      panel.style.zIndex = '2147483640';
+    }
+
     // Create modal overlay
     const modalOverlay = document.createElement('div');
     modalOverlay.id = 'bigoasis-settings-modal';
@@ -623,7 +628,7 @@
       width: 100%;
       height: 100%;
       background: rgba(0, 0, 0, 0.7);
-      z-index: 2147483648;
+      z-index: 2147483650;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -799,10 +804,18 @@
       link.classList.add('donation-link');
     });
 
+    // Function to restore panel z-index when modal closes
+    const restorePanelZIndex = () => {
+      if (panel) {
+        panel.style.zIndex = '2147483647';
+      }
+    };
+
     // Event handlers
     document.getElementById('modal-cancel').addEventListener('click', () => {
       modalOverlay.remove();
       style.remove();
+      restorePanelZIndex();
     });
 
     document.getElementById('modal-save').addEventListener('click', async () => {
@@ -839,6 +852,7 @@
         setTimeout(() => {
           modalOverlay.remove();
           style.remove();
+          restorePanelZIndex();
         }, 1500);
         
       } catch (error) {
@@ -853,6 +867,7 @@
       if (e.target === modalOverlay) {
         modalOverlay.remove();
         style.remove();
+        restorePanelZIndex();
       }
     });
 
@@ -861,6 +876,7 @@
       if (e.key === 'Escape') {
         modalOverlay.remove();
         style.remove();
+        restorePanelZIndex();
         document.removeEventListener('keydown', escHandler);
       }
     };
@@ -1130,19 +1146,35 @@
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = result.innerHTML;
     
-    // Create shareable format
-    const timeComplexity = tempDiv.querySelector('.bigoasis-complexity-good, .bigoasis-complexity-medium, .bigoasis-complexity-poor');
-    const spaceComplexity = tempDiv.querySelectorAll('.bigoasis-complexity-good, .bigoasis-complexity-medium, .bigoasis-complexity-poor')[1];
+    // Extract complexity values
+    const complexityElements = tempDiv.querySelectorAll('.bigoasis-complexity-good, .bigoasis-complexity-medium, .bigoasis-complexity-poor');
+    const timeComplexity = complexityElements[0] ? complexityElements[0].textContent.trim() : 'N/A';
+    const spaceComplexity = complexityElements[1] ? complexityElements[1].textContent.trim() : 'N/A';
     
-    const shareText = `🌴 BigOasis Analysis Results 🌴
-
-⏱️ Time Complexity: ${timeComplexity ? timeComplexity.textContent : 'N/A'}
-💾 Space Complexity: ${spaceComplexity ? spaceComplexity.textContent : 'N/A'}
-
-Problems solved: ${problemsSolved} 🚀
-Analyzed with AI in seconds!
-
-#BigOasis #LeetCode #Algorithms #BigO`;
+    // Extract Why explanation
+    const whyElement = tempDiv.querySelector('.bigoasis-result-line:nth-child(3)');
+    let whyText = 'N/A';
+    if (whyElement) {
+      const strongTag = whyElement.querySelector('strong');
+      whyText = strongTag ? whyElement.textContent.replace(strongTag.textContent, '').trim() : whyElement.textContent.trim();
+      whyText = whyText.replace(/^💡\s*/, '').trim();
+    }
+    
+    // Extract Tip if exists
+    const tipElement = tempDiv.querySelector('.bigoasis-optimization');
+    let tipText = '';
+    if (tipElement) {
+      const strongTag = tipElement.querySelector('strong');
+      tipText = strongTag ? tipElement.textContent.replace(strongTag.textContent, '').trim() : tipElement.textContent.trim();
+      tipText = tipText.replace(/^⚡\s*/, '').trim();
+    }
+    
+    // Create comment format
+    let shareText = `/* TC: ${timeComplexity}\n   SC: ${spaceComplexity}\n   Why: ${whyText}`;
+    if (tipText) {
+      shareText += `\n   Tip: ${tipText}`;
+    }
+    shareText += ` */`;
     
     navigator.clipboard.writeText(shareText).then(() => {
       const orig = copyBtn.textContent;
