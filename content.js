@@ -1,5 +1,25 @@
 ﻿(function(){
-  if(document.getElementById('bigoasis-panel')) return;
+  console.log('BigOasis: Script loaded!', window.location.href);
+  
+  // Don't load on non-problem pages
+  const url = window.location.href;
+  // Updated regex to match /problems/[name]/ with optional description, submissions, solutions, etc.
+  const isProblemUrl = /\/problems\/[^\/]+/.test(url);
+  
+  console.log('BigOasis: Is problem URL?', isProblemUrl, url);
+  
+  if (!isProblemUrl) {
+    console.log('BigOasis: Not a problem page, exiting.');
+    return;
+  }
+
+  // If already loaded, don't reload
+  if(document.getElementById('bigoasis-panel')) {
+    console.log('BigOasis: Panel already exists, exiting.');
+    return;
+  }
+
+  console.log('BigOasis: Initializing extension...');
 
   let isTransparent = false;
 
@@ -883,8 +903,10 @@
     document.addEventListener('keydown', escHandler);
   }
 
+  console.log('BigOasis: Creating panel element...');
   panel = document.createElement('div');
   panel.id = 'bigoasis-panel';
+  console.log('BigOasis: Panel created:', panel);
 
   const header = document.createElement('div');
   header.id = 'bigoasis-header';
@@ -1002,7 +1024,10 @@
   
   panel.appendChild(header);
   panel.appendChild(result);
+  
+  console.log('BigOasis: Appending panel to document...');
   document.documentElement.appendChild(panel);
+  console.log('BigOasis: Panel appended! Should be visible now.');
 
   // Initialize position
   const rect = panel.getBoundingClientRect();
@@ -1418,6 +1443,33 @@
       console.warn('BigOasis: Cleanup error:', error);
     }
   }
+
+  // Monitor URL changes for SPA navigation
+  let lastUrl = location.href;
+  new MutationObserver(() => {
+    const currentUrl = location.href;
+    if (currentUrl !== lastUrl) {
+      lastUrl = currentUrl;
+      
+      const isProblemUrl = /\/problems\/[^\/]+/.test(currentUrl);
+      
+      // Wait a bit for editor to load on new page
+      setTimeout(() => {
+        // Check if we're still on a problem page
+        if (isProblemUrl) {
+          // Show panel if hidden
+          if (panel && panel.style.display === 'none') {
+            panel.style.display = 'flex';
+          }
+        } else {
+          // Hide panel if navigated away from problem page
+          if (panel && panel.style.display !== 'none') {
+            panel.style.display = 'none';
+          }
+        }
+      }, 1000); // Wait 1 second for editor to load
+    }
+  }).observe(document, { subtree: true, childList: true });
 
   // Handle page unload
   window.addEventListener('beforeunload', cleanup);
